@@ -65,6 +65,10 @@
         "clusterGroupName": {
           "type": "string"
         },
+        "experimentalCapabilities": {
+          "type": "string",
+          "description": "String to enable certain experimental capabilities in the operator and the framework."
+        },
         "git": {
           "type": "object",
           "additionalProperties": false,
@@ -153,12 +157,27 @@
         },
         "options": {
           "$ref": "#/definitions/Options"
+        },
+        "secretStore": {
+          "$ref": "#/definitions/GlobalSecretStore"
         }
       },
       "required": [
         "options"
       ],
       "title": "Global"
+    },
+    "GlobalSecretStore": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "backend": {
+          "type": "string",
+          "description": "Name of the secrets backend",
+          "default": "vault"
+        }
+      },
+      "title": "GlobalSecretsStore"
     },
     "GlobalGit": {
       "type": "object",
@@ -239,7 +258,14 @@
             "description": "Templated value file paths."
 	},
         "namespaces": {
-          "type": "array",
+          "anyOf": [
+            {
+              "type": "array"
+            },
+            {
+              "type": "object"
+            }
+          ],
           "description": "This is the array of namespaces that the VP framework will create.  In addition, operator groups will also be created for each namespace.",
           "items": {
             "$ref": "#/definitions/Namespaces"
@@ -297,7 +323,14 @@
           }
         },
         "projects": {
-          "type": "array",
+          "anyOf": [
+            {
+              "type": "array"
+            },
+            {
+              "type": "object"
+            }
+          ],
           "description": "The list of projects that will be created in the ArgoCD instances.",
           "items": {
             "type": "string"
@@ -317,6 +350,9 @@
             "$ref": "#/definitions/Applications"
           }
         },
+        "argoCD": {
+          "$ref": "#/definitions/ArgoCD"
+        },
         "imperative": {
           "$ref": "#/definitions/Imperative"
         },
@@ -333,9 +369,6 @@
           "items": {
             "$ref": "#/definitions/ManagedClusterGroup"
           }
-        },
-        "externalClusters": {
-          "type": "array"
         }
       },
       "required": [
@@ -487,6 +520,54 @@
         "project"
       ],
       "title": "Applications"
+    },
+    "ArgoCD": {
+      "type": "object",
+      "description": "Details for configuring ArgoCD instances in particular",
+      "additionalProperties": false,
+      "properties": {
+        "configManagementPlugins": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ArgoCDConfigManagementPlugin"
+          },
+          "description": "The new configManagementPlugins array, will also generate configMaps to inject into the plugins"
+        },
+        "initContainers": {
+          "type": "array",
+          "description": "A list of initContainers to add to the repo-server if needed"
+        }
+      }
+    },
+    "ArgoCDConfigManagementPlugin": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Name for the config management plugin"
+        },
+        "image": {
+          "type": "string",
+          "description": "Image for a sidecar container"
+        },
+        "imagePullPolicy": {
+          "type": "string",
+          "description": "Image pull policy for the sidecar. Defaults to 'Always'"
+        },
+        "pluginConfig": {
+          "type": "string",
+          "description": "Configuration file to project into sidecar container. This will create a configMap if specified"
+        },
+        "pluginArgs": {
+          "type": "array",
+          "description": "Additional args to pass to the cmpserver command, usually loglevel"
+        }
+      },
+      "required": [
+        "name",
+        "image"
+      ]
     },
     "IndexImages": {
       "type": "object",
