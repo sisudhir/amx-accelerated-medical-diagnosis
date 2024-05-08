@@ -1,6 +1,8 @@
 global:
   extraValueFiles: []
   pattern: common
+  secretStore:
+    backend: "vault"
   targetRevision: main
   options:
     useCSV: True
@@ -18,10 +20,14 @@ clusterGroup:
   targetCluster: in-cluster
   sharedValueFiles: []
 
+  argoCD:
+    initContainers: []
+    configManagementPlugins: []
+
   imperative:
     jobs: []
     # This image contains ansible + kubernetes.core by default and is used to run the jobs
-    image: registry.redhat.io/ansible-automation-platform-23/ee-supported-rhel8:latest
+    image: registry.redhat.io/ansible-automation-platform-24/ee-supported-rhel9:latest
     namespace: "imperative"
     # configmap name in the namespace that will contain all helm values
     valuesConfigMap: "helm-values-configmap"
