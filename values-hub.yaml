@@ -47,6 +47,12 @@ clusterGroup:
       namespace: openshift-nfd
       project: openshift-nfd
       path: charts/all/nfd
+      ignoreDifferences:
+      - group: nfd.openshift.io
+        kind: NodeFeatureDiscovery
+        jqPathExpressions:
+        - '.spec.customConfig'
+        - '.spec.topologyupdater'
 
     vault:
       name: vault
