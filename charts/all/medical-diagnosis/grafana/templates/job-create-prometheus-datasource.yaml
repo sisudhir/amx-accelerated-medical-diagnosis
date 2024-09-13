@@ -15,7 +15,7 @@ spec:
         - -c
         - |
           #!/usr/bin/env bash
-          TOKEN=$( oc get secret xraylab-grafana-sa-token -n xraylab-1 -o jsonpath='{.data.token}' | base64 --decode)
+          TOKEN=$( oc get secret {{ .Values.global.xraylab.serviceAccountName }}-token -n xraylab-1 -o jsonpath='{.data.token}' | base64 --decode)
           cat <<EOF | oc create -f -
            apiVersion: grafana.integreatly.org/v1beta1
            kind: GrafanaDatasource
@@ -45,5 +45,5 @@ spec:
         name: get-grafana-token
       dnsPolicy: ClusterFirst
       restartPolicy: Never
-      serviceAccount: xraylab-grafana-sa
+      serviceAccount: {{ .Values.global.xraylab.serviceAccountName }}
       terminationGracePeriodSeconds: 60
