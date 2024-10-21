@@ -5,7 +5,6 @@ clusterGroup:
   namespaces:
   - open-cluster-management
   - openshift-serverless
-  - openshift-storage
   - xraylab-1
   - knative-serving
   - staging
@@ -22,10 +21,6 @@ clusterGroup:
       name: grafana-operator
       namespace: xraylab-1
       source: community-operators
-
-    odf:
-      name: odf-operator
-      namespace: openshift-storage
 
     serverless:
       name: serverless-operator
