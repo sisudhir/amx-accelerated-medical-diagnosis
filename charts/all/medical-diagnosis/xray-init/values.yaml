@@ -9,7 +9,7 @@ global:
 
 objectStore:
   user:
-    name: xraylab-1
+    name: ocs-storagecluster-cephobjectstoreuser
     displayName: "XRaylab-1 RGW User"
   name: ocs-storagecluster-cephobjectstore
   namespace: openshift-storage
